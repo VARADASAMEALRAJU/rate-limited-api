@@ -2,14 +2,17 @@
 FROM node:20-alpine AS builder
 WORKDIR /app
 COPY package*.json ./
-# Install ALL dependencies (including jest for testing)
+# Install ALL dependencies (including dev)
 RUN npm ci
+# Copy source code
 COPY . .
+# CRITICAL FIX: Delete development/testing packages before moving to prod!
+RUN npm prune --omit=dev
 
-# Stage 2: Runtime environment
+# Stage 2: Runtime production environment
 FROM node:20-alpine
 WORKDIR /app
-# Copy everything from the builder stage, including the test tools
+# Copy the clean, pruned files from the builder stage
 COPY --from=builder /app .
 EXPOSE 8080
 CMD ["npm", "start"]
