@@ -1,0 +1,27 @@
+{
+  "title": "API Rate Limiter Dashboard",
+  "timezone": "browser",
+  "panels": [
+    {
+      "type": "timeseries",
+      "title": "Total API Requests",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
+      "targets": [ { "expr": "sum(rate(api_requests_total[1m]))", "legendFormat": "Requests / sec" } ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Rate Limiter Allowed vs Blocked",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
+      "targets": [
+        { "expr": "sum(rate(rate_limit_allowed_total[1m]))", "legendFormat": "Allowed / sec" },
+        { "expr": "sum(rate(rate_limit_hits_total[1m]))", "legendFormat": "Blocked (429) / sec" }
+      ]
+    },
+    {
+      "type": "stat",
+      "title": "Total Blocked Requests (All Time)",
+      "gridPos": { "h": 4, "w": 12, "x": 0, "y": 8 },
+      "targets": [ { "expr": "sum(rate_limit_hits_total)" } ]
+    }
+  ]
+}
